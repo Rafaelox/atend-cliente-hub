@@ -100,7 +100,7 @@ const AgendamentosPage = () => {
             <CardHeader>
               <CardTitle className="text-sm">Resumo do Dia</CardTitle>
             </CardHeader>
-            <Car dContent>
+            <CardContent>
               <div className="space-y-3">
                 <div className="flex justify-between">
                   <span className="text-sm text-gray-600">Total de agendamentos</span>
