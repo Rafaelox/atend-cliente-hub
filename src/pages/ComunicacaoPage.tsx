@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { MessageCircle, ExternalLink, Clock, User2 } from 'lucide-react';
+import { MessageCircle, ExternalLink, Clock, User2, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 import ChatMessage from '@/components/Communication/ChatMessage';
 import ChatInput from '@/components/Communication/ChatInput';
@@ -10,17 +10,24 @@ import ClientInfo from '@/components/Communication/ClientInfo';
 import QuickMessages from '@/components/Communication/QuickMessages';
 import BotConfig from '@/components/Communication/BotConfig';
 
+interface ChatMessageType {
+  id: string;
+  sender: 'cliente' | 'bot' | 'atendente';
+  message: string;
+  timestamp: Date;
+}
+
 const ComunicacaoPage = () => {
-  const [chatMessages, setChatMessages] = useState([
+  const [chatMessages, setChatMessages] = useState<ChatMessageType[]>([
     {
       id: '1',
-      sender: 'cliente' as const,
+      sender: 'cliente',
       message: 'Olá, gostaria de saber sobre os horários disponíveis',
       timestamp: new Date()
     },
     {
       id: '2',
-      sender: 'bot' as const,
+      sender: 'bot',
       message: 'Olá! Temos horários disponíveis para esta semana. Que tipo de consulta você precisa?',
       timestamp: new Date()
     }
@@ -42,9 +49,9 @@ const ComunicacaoPage = () => {
   const handleSendMessage = () => {
     if (!newMessage.trim()) return;
 
-    const message = {
+    const message: ChatMessageType = {
       id: Date.now().toString(),
-      sender: 'atendente' as const,
+      sender: 'atendente',
       message: newMessage,
       timestamp: new Date()
     };
