@@ -1,11 +1,10 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { MessageCircle, Send, Bot, ExternalLink, Phone } from 'lucide-react';
+import { MessageCircle, Send, Bot, ExternalLink, Phone, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 
 const ComunicacaoPage = () => {
