@@ -18,35 +18,35 @@ interface ClientInfoProps {
 
 const ClientInfo = ({ cliente, onOpenWhatsApp }: ClientInfoProps) => {
   return (
-    <Card className="shadow-xl border-0 bg-white/70 backdrop-blur-sm">
-      <CardHeader className="bg-gradient-to-r from-emerald-50 to-emerald-100 border-b">
-        <CardTitle className="text-slate-900">Informações do Cliente</CardTitle>
+    <Card className="shadow-lg lg:shadow-xl border-0 bg-white/70 backdrop-blur-sm">
+      <CardHeader className="bg-gradient-to-r from-emerald-50 to-emerald-100 border-b p-3 lg:p-6">
+        <CardTitle className="text-slate-900 text-base lg:text-lg">Informações do Cliente</CardTitle>
       </CardHeader>
-      <CardContent className="p-6 space-y-4">
-        <div className="space-y-3">
-          <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
-            <User2 className="h-4 w-4 text-slate-500" />
-            <div>
+      <CardContent className="p-3 lg:p-6 space-y-3 lg:space-y-4">
+        <div className="space-y-2 lg:space-y-3">
+          <div className="flex items-center gap-2 lg:gap-3 p-2 lg:p-3 bg-slate-50 rounded-lg">
+            <User2 className="h-3 w-3 lg:h-4 lg:w-4 text-slate-500 flex-shrink-0" />
+            <div className="min-w-0 flex-1">
               <Label className="text-xs text-slate-500 uppercase tracking-wide">Nome</Label>
-              <p className="font-medium text-slate-900">{cliente.nome}</p>
+              <p className="font-medium text-slate-900 text-sm lg:text-base truncate">{cliente.nome}</p>
             </div>
           </div>
-          <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
-            <Phone className="h-4 w-4 text-slate-500" />
-            <div>
+          <div className="flex items-center gap-2 lg:gap-3 p-2 lg:p-3 bg-slate-50 rounded-lg">
+            <Phone className="h-3 w-3 lg:h-4 lg:w-4 text-slate-500 flex-shrink-0" />
+            <div className="min-w-0 flex-1">
               <Label className="text-xs text-slate-500 uppercase tracking-wide">Telefone</Label>
-              <p className="font-medium text-slate-900">{cliente.telefone}</p>
+              <p className="font-medium text-slate-900 text-sm lg:text-base">{cliente.telefone}</p>
             </div>
           </div>
-          <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
-            <MessageCircle className="h-4 w-4 text-slate-500" />
-            <div>
+          <div className="flex items-center gap-2 lg:gap-3 p-2 lg:p-3 bg-slate-50 rounded-lg">
+            <MessageCircle className="h-3 w-3 lg:h-4 lg:w-4 text-slate-500 flex-shrink-0" />
+            <div className="min-w-0 flex-1">
               <Label className="text-xs text-slate-500 uppercase tracking-wide">E-mail</Label>
-              <p className="font-medium text-slate-900">{cliente.email}</p>
+              <p className="font-medium text-slate-900 text-sm lg:text-base truncate">{cliente.email}</p>
             </div>
           </div>
         </div>
-        <Button onClick={onOpenWhatsApp} className="w-full bg-green-600 hover:bg-green-700 shadow-lg">
+        <Button onClick={onOpenWhatsApp} className="w-full bg-green-600 hover:bg-green-700 shadow-lg" size="sm">
           <Phone className="h-4 w-4 mr-2" />
           Contatar via WhatsApp
         </Button>

@@ -68,52 +68,64 @@ const ComunicacaoPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-4 lg:p-8">
-      <div className="max-w-7xl mx-auto space-y-8">
-        {/* Header moderno */}
-        <div className="flex items-center justify-between">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-2 sm:p-4 lg:p-8">
+      <div className="max-w-7xl mx-auto space-y-4 lg:space-y-8">
+        {/* Header moderno - adaptado para mobile */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="space-y-2">
-            <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-3">
-              <div className="p-2 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl text-white">
-                <MessageCircle className="h-8 w-8" />
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900 flex items-center gap-2 lg:gap-3">
+              <div className="p-1.5 lg:p-2 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg lg:rounded-xl text-white">
+                <MessageCircle className="h-5 w-5 lg:h-8 lg:w-8" />
               </div>
-              Comunicação com Cliente
+              <span className="hidden sm:inline">Comunicação com Cliente</span>
+              <span className="sm:hidden">Chat</span>
             </h1>
-            <p className="text-slate-600">Gerencie conversas e configure respostas automáticas</p>
+            <p className="text-sm lg:text-base text-slate-600 hidden sm:block">Gerencie conversas e configure respostas automáticas</p>
           </div>
           <Button 
             onClick={openWhatsApp} 
-            className="bg-green-600 hover:bg-green-700 text-white shadow-lg"
-            size="lg"
+            className="bg-green-600 hover:bg-green-700 text-white shadow-lg w-full sm:w-auto"
+            size="sm"
           >
-            <ExternalLink className="h-5 w-5 mr-2" />
-            Abrir WhatsApp
+            <ExternalLink className="h-4 w-4 mr-2" />
+            <span className="sm:hidden">WhatsApp</span>
+            <span className="hidden sm:inline">Abrir WhatsApp</span>
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
-          {/* Chat principal - ocupa mais espaço */}
-          <div className="xl:col-span-3 space-y-6">
-            <Card className="shadow-xl border-0 bg-white/70 backdrop-blur-sm">
-              <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b">
+        {/* Layout principal - mobile first */}
+        <div className="space-y-4 lg:space-y-0 lg:grid lg:grid-cols-4 lg:gap-6">
+          {/* Informações do cliente - primeira no mobile */}
+          <div className="lg:hidden">
+            <ClientInfo 
+              cliente={clienteAtual}
+              onOpenWhatsApp={openWhatsApp}
+            />
+          </div>
+
+          {/* Chat principal */}
+          <div className="lg:col-span-3 space-y-4 lg:space-y-6">
+            <Card className="shadow-lg lg:shadow-xl border-0 bg-white/70 backdrop-blur-sm">
+              <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b p-3 lg:p-6">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-blue-100 rounded-lg">
-                      <User2 className="h-5 w-5 text-blue-600" />
+                  <div className="flex items-center gap-2 lg:gap-3">
+                    <div className="p-1.5 lg:p-2 bg-blue-100 rounded-lg">
+                      <User2 className="h-4 w-4 lg:h-5 lg:w-5 text-blue-600" />
                     </div>
                     <div>
-                      <CardTitle className="text-xl text-slate-900">{clienteAtual.nome}</CardTitle>
-                      <CardDescription>Conversa ativa</CardDescription>
+                      <CardTitle className="text-lg lg:text-xl text-slate-900">{clienteAtual.nome}</CardTitle>
+                      <CardDescription className="text-sm">Conversa ativa</CardDescription>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 text-sm text-slate-500">
-                    <Clock className="h-4 w-4" />
-                    Online agora
+                  <div className="flex items-center gap-2 text-xs lg:text-sm text-slate-500">
+                    <Clock className="h-3 w-3 lg:h-4 lg:w-4" />
+                    <span className="hidden sm:inline">Online agora</span>
+                    <span className="sm:hidden">Online</span>
                   </div>
                 </div>
               </CardHeader>
               <CardContent className="p-0">
-                <div className="h-[500px] overflow-y-auto p-6 space-y-4 bg-gradient-to-b from-white to-slate-50">
+                <div className="h-[400px] sm:h-[450px] lg:h-[500px] overflow-y-auto p-3 lg:p-6 space-y-3 lg:space-y-4 bg-gradient-to-b from-white to-slate-50">
                   {chatMessages.map((msg) => (
                     <ChatMessage
                       key={msg.id}
@@ -134,16 +146,27 @@ const ComunicacaoPage = () => {
               </CardContent>
             </Card>
 
-            <BotConfig />
+            {/* BotConfig - escondido no mobile, visível no desktop */}
+            <div className="hidden lg:block">
+              <BotConfig />
+            </div>
           </div>
 
-          {/* Sidebar direita */}
-          <div className="space-y-6">
+          {/* Sidebar direita - oculta no mobile */}
+          <div className="hidden lg:block space-y-6">
             <ClientInfo 
               cliente={clienteAtual}
               onOpenWhatsApp={openWhatsApp}
             />
 
+            <QuickMessages 
+              messages={quickMessages}
+              onSelectMessage={setNewMessage}
+            />
+          </div>
+
+          {/* Quick Messages - visível no mobile na parte inferior */}
+          <div className="lg:hidden">
             <QuickMessages 
               messages={quickMessages}
               onSelectMessage={setNewMessage}

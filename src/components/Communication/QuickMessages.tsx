@@ -10,21 +10,21 @@ interface QuickMessagesProps {
 
 const QuickMessages = ({ messages, onSelectMessage }: QuickMessagesProps) => {
   return (
-    <Card className="shadow-xl border-0 bg-white/70 backdrop-blur-sm">
-      <CardHeader className="bg-gradient-to-r from-amber-50 to-amber-100 border-b">
-        <CardTitle className="text-slate-900">Mensagens Rápidas</CardTitle>
-        <CardDescription>Clique para usar uma resposta pré-definida</CardDescription>
+    <Card className="shadow-lg lg:shadow-xl border-0 bg-white/70 backdrop-blur-sm">
+      <CardHeader className="bg-gradient-to-r from-amber-50 to-amber-100 border-b p-3 lg:p-6">
+        <CardTitle className="text-slate-900 text-base lg:text-lg">Mensagens Rápidas</CardTitle>
+        <CardDescription className="text-sm lg:text-base">Clique para usar uma resposta pré-definida</CardDescription>
       </CardHeader>
-      <CardContent className="p-6 space-y-3">
+      <CardContent className="p-3 lg:p-6 space-y-2 lg:space-y-3">
         {messages.map((msg, index) => (
           <Button 
             key={index}
             variant="outline" 
             size="sm" 
-            className="w-full justify-start text-left h-auto p-3 hover:bg-amber-50 hover:border-amber-300 transition-colors"
+            className="w-full justify-start text-left h-auto p-2 lg:p-3 hover:bg-amber-50 hover:border-amber-300 transition-colors"
             onClick={() => onSelectMessage(msg)}
           >
-            <span className="text-sm leading-relaxed">{msg}</span>
+            <span className="text-xs lg:text-sm leading-relaxed">{msg}</span>
           </Button>
         ))}
       </CardContent>
