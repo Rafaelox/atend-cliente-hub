@@ -2,23 +2,14 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { MessageCircle, ExternalLink, Clock, User2, Plus } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { MessageCircle, Send, Bot, ExternalLink, Phone } from 'lucide-react';
 import { toast } from 'sonner';
-import ChatMessage from '@/components/Communication/ChatMessage';
-import ChatInput from '@/components/Communication/ChatInput';
-import ClientInfo from '@/components/Communication/ClientInfo';
-import QuickMessages from '@/components/Communication/QuickMessages';
-import BotConfig from '@/components/Communication/BotConfig';
-
-interface ChatMessageType {
-  id: string;
-  sender: 'cliente' | 'bot' | 'atendente';
-  message: string;
-  timestamp: Date;
-}
 
 const ComunicacaoPage = () => {
-  const [chatMessages, setChatMessages] = useState<ChatMessageType[]>([
+  const [chatMessages, setChatMessages] = useState([
     {
       id: '1',
       sender: 'cliente',
@@ -40,16 +31,10 @@ const ComunicacaoPage = () => {
     email: 'maria.silva@email.com'
   };
 
-  const quickMessages = [
-    'Obrigado pelo contato! Como posso ajudá-lo?',
-    'Vou verificar a disponibilidade e retorno em breve.',
-    'Seu agendamento foi confirmado. Nos vemos em breve!'
-  ];
-
   const handleSendMessage = () => {
     if (!newMessage.trim()) return;
 
-    const message: ChatMessageType = {
+    const message = {
       id: Date.now().toString(),
       sender: 'atendente',
       message: newMessage,
@@ -67,111 +52,173 @@ const ComunicacaoPage = () => {
     window.open(url, '_blank');
   };
 
+  const formatTime = (date: Date) => {
+    return date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  };
+
+  const getSenderName = (sender: string) => {
+    switch (sender) {
+      case 'cliente':
+        return clienteAtual.nome;
+      case 'bot':
+        return 'Assistente Virtual';
+      case 'atendente':
+        return 'Você';
+      default:
+        return sender;
+    }
+  };
+
+  const getSenderStyle = (sender: string) => {
+    switch (sender) {
+      case 'cliente':
+        return 'bg-gray-100 text-gray-900 ml-0 mr-12';
+      case 'bot':
+        return 'bg-blue-100 text-blue-900 ml-0 mr-12';
+      case 'atendente':
+        return 'bg-green-100 text-green-900 ml-12 mr-0';
+      default:
+        return 'bg-gray-100 text-gray-900';
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-2 sm:p-4 lg:p-8">
-      <div className="max-w-7xl mx-auto space-y-4 lg:space-y-8">
-        {/* Header moderno - adaptado para mobile */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div className="space-y-2">
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900 flex items-center gap-2 lg:gap-3">
-              <div className="p-1.5 lg:p-2 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg lg:rounded-xl text-white">
-                <MessageCircle className="h-5 w-5 lg:h-8 lg:w-8" />
+    <div className="p-6 space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-gray-900 flex items-center space-x-2">
+          <MessageCircle className="h-6 w-6" />
+          <span>Comunicação com Cliente</span>
+        </h1>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                <span>Chat - {clienteAtual.nome}</span>
+                <Button onClick={openWhatsApp} size="sm" className="flex items-center space-x-2">
+                  <ExternalLink className="h-4 w-4" />
+                  <span>Abrir WhatsApp</span>
+                </Button>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="h-96 overflow-y-auto border rounded-lg p-4 space-y-3 bg-gray-50">
+                {chatMessages.map((msg) => (
+                  <div key={msg.id} className={`p-3 rounded-lg ${getSenderStyle(msg.sender)}`}>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-medium text-sm">
+                        {getSenderName(msg.sender)}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        {formatTime(msg.timestamp)}
+                      </span>
+                    </div>
+                    <p className="text-sm">{msg.message}</p>
+                  </div>
+                ))}
               </div>
-              <span className="hidden sm:inline">Comunicação com Cliente</span>
-              <span className="sm:hidden">Chat</span>
-            </h1>
-            <p className="text-sm lg:text-base text-slate-600 hidden sm:block">Gerencie conversas e configure respostas automáticas</p>
-          </div>
-          <Button 
-            onClick={openWhatsApp} 
-            className="bg-green-600 hover:bg-green-700 text-white shadow-lg w-full sm:w-auto"
-            size="sm"
-          >
-            <ExternalLink className="h-4 w-4 mr-2" />
-            <span className="sm:hidden">WhatsApp</span>
-            <span className="hidden sm:inline">Abrir WhatsApp</span>
-          </Button>
+              
+              <div className="mt-4 flex space-x-2">
+                <Input
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  placeholder="Digite sua mensagem..."
+                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                />
+                <Button onClick={handleSendMessage}>
+                  <Send className="h-4 w-4" />
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Bot className="h-5 w-5" />
+                <span>Configuração do Bot</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label>Respostas Automáticas</Label>
+                <div className="space-y-2">
+                  <div className="p-3 border rounded-lg bg-gray-50">
+                    <p className="font-medium text-sm">Palavra-chave: "horário"</p>
+                    <p className="text-sm text-gray-600">Resposta: "Nossos horários de atendimento são de segunda a sexta, das 8h às 18h."</p>
+                  </div>
+                  <div className="p-3 border rounded-lg bg-gray-50">
+                    <p className="font-medium text-sm">Palavra-chave: "valor"</p>
+                    <p className="text-sm text-gray-600">Resposta: "Os valores variam conforme o tipo de consulta. Entre em contato para mais informações."</p>
+                  </div>
+                </div>
+              </div>
+              <Button variant="outline" size="sm">
+                <Plus className="h-4 w-4 mr-2" />
+                Adicionar Nova Resposta
+              </Button>
+            </CardContent>
+          </Card>
         </div>
 
-        {/* Layout principal - mobile first */}
-        <div className="space-y-4 lg:space-y-0 lg:grid lg:grid-cols-4 lg:gap-6">
-          {/* Informações do cliente - primeira no mobile */}
-          <div className="lg:hidden">
-            <ClientInfo 
-              cliente={clienteAtual}
-              onOpenWhatsApp={openWhatsApp}
-            />
-          </div>
+        <div className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Informações do Cliente</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div>
+                <Label className="text-sm text-gray-600">Nome</Label>
+                <p className="font-medium">{clienteAtual.nome}</p>
+              </div>
+              <div>
+                <Label className="text-sm text-gray-600">Telefone</Label>
+                <p className="font-medium">{clienteAtual.telefone}</p>
+              </div>
+              <div>
+                <Label className="text-sm text-gray-600">E-mail</Label>
+                <p className="font-medium">{clienteAtual.email}</p>
+              </div>
+              <Button onClick={openWhatsApp} className="w-full mt-4">
+                <Phone className="h-4 w-4 mr-2" />
+                Contatar via WhatsApp
+              </Button>
+            </CardContent>
+          </Card>
 
-          {/* Chat principal */}
-          <div className="lg:col-span-3 space-y-4 lg:space-y-6">
-            <Card className="shadow-lg lg:shadow-xl border-0 bg-white/70 backdrop-blur-sm">
-              <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b p-3 lg:p-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 lg:gap-3">
-                    <div className="p-1.5 lg:p-2 bg-blue-100 rounded-lg">
-                      <User2 className="h-4 w-4 lg:h-5 lg:w-5 text-blue-600" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-lg lg:text-xl text-slate-900">{clienteAtual.nome}</CardTitle>
-                      <CardDescription className="text-sm">Conversa ativa</CardDescription>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2 text-xs lg:text-sm text-slate-500">
-                    <Clock className="h-3 w-3 lg:h-4 lg:w-4" />
-                    <span className="hidden sm:inline">Online agora</span>
-                    <span className="sm:hidden">Online</span>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="p-0">
-                <div className="h-[400px] sm:h-[450px] lg:h-[500px] overflow-y-auto p-3 lg:p-6 space-y-3 lg:space-y-4 bg-gradient-to-b from-white to-slate-50">
-                  {chatMessages.map((msg) => (
-                    <ChatMessage
-                      key={msg.id}
-                      id={msg.id}
-                      sender={msg.sender}
-                      message={msg.message}
-                      timestamp={msg.timestamp}
-                      clientName={clienteAtual.nome}
-                    />
-                  ))}
-                </div>
-                
-                <ChatInput
-                  newMessage={newMessage}
-                  setNewMessage={setNewMessage}
-                  onSendMessage={handleSendMessage}
-                />
-              </CardContent>
-            </Card>
-
-            {/* BotConfig - escondido no mobile, visível no desktop */}
-            <div className="hidden lg:block">
-              <BotConfig />
-            </div>
-          </div>
-
-          {/* Sidebar direita - oculta no mobile */}
-          <div className="hidden lg:block space-y-6">
-            <ClientInfo 
-              cliente={clienteAtual}
-              onOpenWhatsApp={openWhatsApp}
-            />
-
-            <QuickMessages 
-              messages={quickMessages}
-              onSelectMessage={setNewMessage}
-            />
-          </div>
-
-          {/* Quick Messages - visível no mobile na parte inferior */}
-          <div className="lg:hidden">
-            <QuickMessages 
-              messages={quickMessages}
-              onSelectMessage={setNewMessage}
-            />
-          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-sm">Mensagens Rápidas</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full justify-start text-left"
+                onClick={() => setNewMessage('Obrigado pelo contato! Como posso ajudá-lo?')}
+              >
+                Saudação inicial
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full justify-start text-left"
+                onClick={() => setNewMessage('Vou verificar a disponibilidade e retorno em breve.')}
+              >
+                Verificar disponibilidade
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full justify-start text-left"
+                onClick={() => setNewMessage('Seu agendamento foi confirmado. Nos vemos em breve!')}
+              >
+                Confirmar agendamento
+              </Button>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
