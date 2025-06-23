@@ -1,12 +1,13 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { MessageCircle, Send, Bot, ExternalLink, Phone, Plus } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { MessageCircle, Send, Bot, ExternalLink, Phone, Plus, Settings } from 'lucide-react';
 import { toast } from 'sonner';
+import ApiConfig from '@/components/Comunicacao/ApiConfig';
 
 const ComunicacaoPage = () => {
   const [chatMessages, setChatMessages] = useState([
@@ -91,136 +92,149 @@ const ComunicacaoPage = () => {
         </h1>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <span>Chat - {clienteAtual.nome}</span>
-                <Button onClick={openWhatsApp} size="sm" className="flex items-center space-x-2">
-                  <ExternalLink className="h-4 w-4" />
-                  <span>Abrir WhatsApp</span>
-                </Button>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="h-96 overflow-y-auto border rounded-lg p-4 space-y-3 bg-gray-50">
-                {chatMessages.map((msg) => (
-                  <div key={msg.id} className={`p-3 rounded-lg ${getSenderStyle(msg.sender)}`}>
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="font-medium text-sm">
-                        {getSenderName(msg.sender)}
-                      </span>
-                      <span className="text-xs text-gray-500">
-                        {formatTime(msg.timestamp)}
-                      </span>
+      <Tabs defaultValue="chat" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="chat">Chat & Mensagens</TabsTrigger>
+          <TabsTrigger value="config">Configurações da API</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="chat" className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-between">
+                    <span>Chat - {clienteAtual.nome}</span>
+                    <Button onClick={openWhatsApp} size="sm" className="flex items-center space-x-2">
+                      <ExternalLink className="h-4 w-4" />
+                      <span>Abrir WhatsApp</span>
+                    </Button>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-96 overflow-y-auto border rounded-lg p-4 space-y-3 bg-gray-50">
+                    {chatMessages.map((msg) => (
+                      <div key={msg.id} className={`p-3 rounded-lg ${getSenderStyle(msg.sender)}`}>
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="font-medium text-sm">
+                            {getSenderName(msg.sender)}
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            {formatTime(msg.timestamp)}
+                          </span>
+                        </div>
+                        <p className="text-sm">{msg.message}</p>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <div className="mt-4 flex space-x-2">
+                    <Input
+                      value={newMessage}
+                      onChange={(e) => setNewMessage(e.target.value)}
+                      placeholder="Digite sua mensagem..."
+                      onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                    />
+                    <Button onClick={handleSendMessage}>
+                      <Send className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center space-x-2">
+                    <Bot className="h-5 w-5" />
+                    <span>Configuração do Bot</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Label>Respostas Automáticas</Label>
+                    <div className="space-y-2">
+                      <div className="p-3 border rounded-lg bg-gray-50">
+                        <p className="font-medium text-sm">Palavra-chave: "horário"</p>
+                        <p className="text-sm text-gray-600">Resposta: "Nossos horários de atendimento são de segunda a sexta, das 8h às 18h."</p>
+                      </div>
+                      <div className="p-3 border rounded-lg bg-gray-50">
+                        <p className="font-medium text-sm">Palavra-chave: "valor"</p>
+                        <p className="text-sm text-gray-600">Resposta: "Os valores variam conforme o tipo de consulta. Entre em contato para mais informações."</p>
+                      </div>
                     </div>
-                    <p className="text-sm">{msg.message}</p>
                   </div>
-                ))}
-              </div>
-              
-              <div className="mt-4 flex space-x-2">
-                <Input
-                  value={newMessage}
-                  onChange={(e) => setNewMessage(e.target.value)}
-                  placeholder="Digite sua mensagem..."
-                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                />
-                <Button onClick={handleSendMessage}>
-                  <Send className="h-4 w-4" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+                  <Button variant="outline" size="sm">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Adicionar Nova Resposta
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Bot className="h-5 w-5" />
-                <span>Configuração do Bot</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label>Respostas Automáticas</Label>
-                <div className="space-y-2">
-                  <div className="p-3 border rounded-lg bg-gray-50">
-                    <p className="font-medium text-sm">Palavra-chave: "horário"</p>
-                    <p className="text-sm text-gray-600">Resposta: "Nossos horários de atendimento são de segunda a sexta, das 8h às 18h."</p>
+            <div className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Informações do Cliente</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div>
+                    <Label className="text-sm text-gray-600">Nome</Label>
+                    <p className="font-medium">{clienteAtual.nome}</p>
                   </div>
-                  <div className="p-3 border rounded-lg bg-gray-50">
-                    <p className="font-medium text-sm">Palavra-chave: "valor"</p>
-                    <p className="text-sm text-gray-600">Resposta: "Os valores variam conforme o tipo de consulta. Entre em contato para mais informações."</p>
+                  <div>
+                    <Label className="text-sm text-gray-600">Telefone</Label>
+                    <p className="font-medium">{clienteAtual.telefone}</p>
                   </div>
-                </div>
-              </div>
-              <Button variant="outline" size="sm">
-                <Plus className="h-4 w-4 mr-2" />
-                Adicionar Nova Resposta
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
+                  <div>
+                    <Label className="text-sm text-gray-600">E-mail</Label>
+                    <p className="font-medium">{clienteAtual.email}</p>
+                  </div>
+                  <Button onClick={openWhatsApp} className="w-full mt-4">
+                    <Phone className="h-4 w-4 mr-2" />
+                    Contatar via WhatsApp
+                  </Button>
+                </CardContent>
+              </Card>
 
-        <div className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Informações do Cliente</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div>
-                <Label className="text-sm text-gray-600">Nome</Label>
-                <p className="font-medium">{clienteAtual.nome}</p>
-              </div>
-              <div>
-                <Label className="text-sm text-gray-600">Telefone</Label>
-                <p className="font-medium">{clienteAtual.telefone}</p>
-              </div>
-              <div>
-                <Label className="text-sm text-gray-600">E-mail</Label>
-                <p className="font-medium">{clienteAtual.email}</p>
-              </div>
-              <Button onClick={openWhatsApp} className="w-full mt-4">
-                <Phone className="h-4 w-4 mr-2" />
-                Contatar via WhatsApp
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm">Mensagens Rápidas</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="w-full justify-start text-left"
-                onClick={() => setNewMessage('Obrigado pelo contato! Como posso ajudá-lo?')}
-              >
-                Saudação inicial
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="w-full justify-start text-left"
-                onClick={() => setNewMessage('Vou verificar a disponibilidade e retorno em breve.')}
-              >
-                Verificar disponibilidade
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="w-full justify-start text-left"
-                onClick={() => setNewMessage('Seu agendamento foi confirmado. Nos vemos em breve!')}
-              >
-                Confirmar agendamento
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-sm">Mensagens Rápidas</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full justify-start text-left"
+                    onClick={() => setNewMessage('Obrigado pelo contato! Como posso ajudá-lo?')}
+                  >
+                    Saudação inicial
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full justify-start text-left"
+                    onClick={() => setNewMessage('Vou verificar a disponibilidade e retorno em breve.')}
+                  >
+                    Verificar disponibilidade
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full justify-start text-left"
+                    onClick={() => setNewMessage('Seu agendamento foi confirmado. Nos vemos em breve!')}
+                  >
+                    Confirmar agendamento
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="config" className="space-y-6">
+          <ApiConfig />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
