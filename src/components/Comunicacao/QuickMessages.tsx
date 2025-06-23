@@ -2,12 +2,16 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { MessageSquare } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface QuickMessagesProps {
   onSelectMessage: (message: string) => void;
 }
 
 const QuickMessages = ({ onSelectMessage }: QuickMessagesProps) => {
+  const isMobile = useIsMobile();
+  
   const quickMessages = [
     {
       label: 'Saudação inicial',
@@ -24,20 +28,25 @@ const QuickMessages = ({ onSelectMessage }: QuickMessagesProps) => {
   ];
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-sm">Mensagens Rápidas</CardTitle>
+    <Card className="shadow-sm">
+      <CardHeader className={isMobile ? 'pb-3' : ''}>
+        <CardTitle className={`flex items-center space-x-2 ${isMobile ? 'text-lg' : 'text-sm'}`}>
+          <MessageSquare className="h-4 w-4" />
+          <span>Mensagens Rápidas</span>
+        </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-2">
+      <CardContent className={`space-y-2 ${isMobile ? 'px-3' : ''}`}>
         {quickMessages.map((item, index) => (
           <Button 
             key={index}
             variant="outline" 
-            size="sm" 
-            className="w-full justify-start text-left"
+            size={isMobile ? "sm" : "sm"}
+            className={`w-full justify-start text-left ${isMobile ? 'h-auto py-3 px-3' : ''}`}
             onClick={() => onSelectMessage(item.message)}
           >
-            {item.label}
+            <span className={`${isMobile ? 'text-sm' : ''} truncate`}>
+              {item.label}
+            </span>
           </Button>
         ))}
       </CardContent>
