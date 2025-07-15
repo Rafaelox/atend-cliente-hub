@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Build and deploy script for Easypanel
 

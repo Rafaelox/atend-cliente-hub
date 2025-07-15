@@ -4,13 +4,23 @@ services:
     data:
       serviceName: atend-cliente-hub
       source:
-        type: docker
-        image: atend-cliente-hub
+        type: git
+        repo: https://github.com/seu-usuario/seu-repo.git  # Substitua pela sua URL do repositório
+        branch: main
+      buildCommand: |
+        npm ci
+        npm run build
+      startCommand: |
+        npx serve -s dist -l 80
       domains:
-        - host: yourdomain.com  # Replace with your domain
+        - host: yourdomain.com  # Substitua pelo seu domínio
       env:
         - key: NODE_ENV
           value: production
+        - key: VITE_SUPABASE_URL
+          value: https://mmqorugxbsspuyqlraia.supabase.co
+        - key: VITE_SUPABASE_ANON_KEY
+          value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1tcW9ydWd4YnNzcHV5cWxyYWlhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5MDM3MjYsImV4cCI6MjA2NzQ3OTcyNn0.8e3ohcVXPJVBvtw82aKmvAsCpf_8dfOjaB6U2g-hCTE
       mounts: []
       ports:
         - published: 80
@@ -19,8 +29,8 @@ services:
         replicas: 1
         resources:
           reservations:
-            memory: 512M
+            memory: 256M
           limits:
-            memory: 1G
+            memory: 512M
         restartPolicy:
           condition: unless-stopped
