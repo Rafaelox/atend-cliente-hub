@@ -1,0 +1,26 @@
+name: atend-cliente-hub
+services:
+  - type: app
+    data:
+      serviceName: atend-cliente-hub
+      source:
+        type: docker
+        image: atend-cliente-hub
+      domains:
+        - host: yourdomain.com  # Replace with your domain
+      env:
+        - key: NODE_ENV
+          value: production
+      mounts: []
+      ports:
+        - published: 80
+          target: 80
+      deploy:
+        replicas: 1
+        resources:
+          reservations:
+            memory: 512M
+          limits:
+            memory: 1G
+        restartPolicy:
+          condition: unless-stopped
