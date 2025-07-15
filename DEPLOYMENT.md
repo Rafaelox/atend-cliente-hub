@@ -12,6 +12,7 @@ Este guia explica como fazer o deploy da aplicação Atend Cliente Hub em um VPS
 - Mudança de Docker para Git deploy (mais eficiente)
 - Adicionado serve package para servir arquivos estáticos
 - Configuração de CSP corrigida para Supabase
+- ✅ Arquivos Docker preservados como alternativa (.alternative)
 
 ## Pré-requisitos
 
@@ -62,19 +63,32 @@ O Easypanel irá:
 3. Executar build com `npm run build`
 4. Servir a aplicação na porta 80
 
-## Método Alternativo: Docker
+## 🐳 Método Alternativo: Docker
 
-Se preferir usar Docker, use os arquivos fornecidos:
+Para quem prefere usar Docker em ambiente local ou outros provedores.
 
-```sh
-# Clone o repositório
-git clone <sua-url-do-repo>
-cd atend-cliente-hub
+### Ativando o método Docker
 
-# Execute o deploy
-chmod +x deploy.sh
-./deploy.sh
+1. Use o script de alternância:
+```bash
+chmod +x switch-deployment.sh
+./switch-deployment.sh
 ```
+
+2. Escolha a opção "2" para Docker
+
+3. Execute o deploy Docker:
+```bash
+chmod +x deploy-docker.sh
+./deploy-docker.sh
+```
+
+### Arquivos Docker Alternativos
+- `Dockerfile.alternative` - Configuração Docker
+- `docker-compose.alternative.yml` - Orquestração Docker  
+- `deploy-docker.sh` - Script de deploy Docker
+
+> **Nota:** Os arquivos Docker são mantidos como `.alternative` para não interferir no deploy Git padrão.
 
 ## Configuração de Domínio
 
