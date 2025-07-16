@@ -23,8 +23,8 @@ const Header = ({ user, onLogout, onMenuToggle }: HeaderProps) => {
             <Menu className="h-5 w-5" />
           </Button>
           <div>
-            <h1 className="text-xl font-semibold text-gray-900">Atend Cliente Hub</h1>
-            <p className="text-sm text-gray-500">Sistema de Gestão de Atendimentos</p>
+            <h1 className="text-xl font-semibold text-gray-900">Agenda Oxum</h1>
+            <p className="text-sm text-gray-500">Sistema de Gestão de Agendamentos</p>
           </div>
         </div>
         

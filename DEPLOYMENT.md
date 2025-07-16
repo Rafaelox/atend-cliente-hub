@@ -1,6 +1,6 @@
 # Guia de Deploy para VPS com Easypanel
 
-Este guia explica como fazer o deploy da aplicação Atend Cliente Hub em um VPS usando Easypanel.
+Este guia explica como fazer o deploy da aplicação Agenda Oxum em um VPS usando Easypanel.
 
 ## ⚠️ Problemas Corrigidos
 

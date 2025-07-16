@@ -8,6 +8,7 @@ import {
   CheckSquare, 
   CreditCard, 
   MessageCircle,
+  Settings,
   X
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -26,6 +27,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
     { name: 'Tarefas do Dia', href: '/tarefas', icon: CheckSquare },
     { name: 'Pagamentos', href: '/pagamentos', icon: CreditCard },
     { name: 'Comunicação', href: '/comunicacao', icon: MessageCircle },
+    { name: 'Configurações', href: '/configuracoes', icon: Settings },
   ];
 
   return (

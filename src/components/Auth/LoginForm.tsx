@@ -29,10 +29,10 @@ const LoginForm = ({ onLogin, isLoading }: LoginFormProps) => {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold text-gray-900">
-            Atend Cliente Hub
+            Agenda Oxum
           </CardTitle>
           <CardDescription>
-            Faça login para acessar o sistema de gestão
+            Faça login para acessar o sistema de agendamentos
           </CardDescription>
         </CardHeader>
         <CardContent>

@@ -13,6 +13,7 @@ import HistoricoPage from "./pages/HistoricoPage";
 import TarefasPage from "./pages/TarefasPage";
 import PagamentosPage from "./pages/PagamentosPage";
 import ComunicacaoPage from "./pages/ComunicacaoPage";
+import ConfiguracoesPage from "./pages/ConfiguracoesPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
@@ -37,6 +38,7 @@ const App = () => (
                     <Route path="/tarefas" element={<TarefasPage />} />
                     <Route path="/pagamentos" element={<PagamentosPage />} />
                     <Route path="/comunicacao" element={<ComunicacaoPage />} />
+                    <Route path="/configuracoes" element={<ConfiguracoesPage />} />
                   </Routes>
                 </DashboardLayout>
               </ProtectedRoute>

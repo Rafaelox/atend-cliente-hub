@@ -6,14 +6,14 @@ echo "Starting deployment process..."
 
 # Build Docker image
 echo "Building Docker image..."
-docker build -t atend-cliente-hub .
+docker build -t agenda-oxum .
 
 # Tag image for registry (if using a registry)
-# docker tag atend-cliente-hub your-registry/atend-cliente-hub:latest
+# docker tag agenda-oxum your-registry/agenda-oxum:latest
 
 # Push to registry (if using a registry)
 # echo "Pushing to registry..."
-# docker push your-registry/atend-cliente-hub:latest
+# docker push your-registry/agenda-oxum:latest
 
 # Deploy using docker-compose
 echo "Deploying application..."

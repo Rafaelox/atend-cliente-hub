@@ -1,8 +1,8 @@
-name: atend-cliente-hub
+name: agenda-oxum
 services:
   - type: app
     data:
-      serviceName: atend-cliente-hub
+      serviceName: agenda-oxum
       source:
         type: git
         repo: https://github.com/seu-usuario/seu-repo.git  # Substitua pela sua URL do repositório
@@ -17,10 +17,6 @@ services:
       env:
         - key: NODE_ENV
           value: production
-        - key: VITE_SUPABASE_URL
-          value: https://mmqorugxbsspuyqlraia.supabase.co
-        - key: VITE_SUPABASE_ANON_KEY
-          value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1tcW9ydWd4YnNzcHV5cWxyYWlhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5MDM3MjYsImV4cCI6MjA2NzQ3OTcyNn0.8e3ohcVXPJVBvtw82aKmvAsCpf_8dfOjaB6U2g-hCTE
       mounts: []
       ports:
         - published: 80

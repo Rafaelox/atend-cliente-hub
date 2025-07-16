@@ -1,5 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { apiClient } from '@/lib/api';
 
 interface User {
   id: string;
@@ -8,11 +9,17 @@ interface User {
   role: string;
 }
 
+interface LoginResponse {
+  token: string;
+  user: User;
+  expiresAt?: string;
+}
+
 interface AuthContextType {
   user: User | null;
   token: string | null;
   login: (credentials: { username: string; password: string }) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   isAuthenticated: boolean;
 }
 
@@ -34,31 +41,61 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = async (credentials: { username: string; password: string }) => {
-    // Simular autenticação - em produção, fazer chamada para API
-    if (credentials.username === 'admin' && credentials.password === 'admin123') {
-      const mockUser: User = {
-        id: '1',
-        name: 'Administrador',
-        username: 'admin',
-        role: 'Admin'
-      };
-      const mockToken = 'mock-jwt-token-12345';
+    try {
+      // Verificar se API está configurada
+      if (!apiClient.isConfigured()) {
+        throw new Error('API não configurada. Configure a API primeiro em Configurações.');
+      }
+
+      // Fazer login via API
+      const response = await apiClient.login(credentials) as LoginResponse;
       
-      setUser(mockUser);
-      setToken(mockToken);
-      
-      localStorage.setItem('authToken', mockToken);
-      localStorage.setItem('authUser', JSON.stringify(mockUser));
-    } else {
-      throw new Error('Credenciais inválidas');
+      if (response.token && response.user) {
+        setUser(response.user);
+        setToken(response.token);
+        
+        localStorage.setItem('authToken', response.token);
+        localStorage.setItem('authUser', JSON.stringify(response.user));
+      } else {
+        throw new Error('Resposta inválida da API');
+      }
+    } catch (error) {
+      // Fallback para credenciais locais se API falhar
+      if (credentials.username === 'admin' && credentials.password === 'admin123') {
+        const mockUser: User = {
+          id: '1',
+          name: 'Administrador Local',
+          username: 'admin',
+          role: 'Admin'
+        };
+        const mockToken = 'local-mock-token-12345';
+        
+        setUser(mockUser);
+        setToken(mockToken);
+        
+        localStorage.setItem('authToken', mockToken);
+        localStorage.setItem('authUser', JSON.stringify(mockUser));
+      } else {
+        throw error;
+      }
     }
   };
 
-  const logout = () => {
-    setUser(null);
-    setToken(null);
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('authUser');
+  const logout = async () => {
+    try {
+      // Tentar fazer logout via API se configurada
+      if (apiClient.isConfigured()) {
+        await apiClient.logout();
+      }
+    } catch (error) {
+      console.error('Erro no logout da API:', error);
+    } finally {
+      // Sempre limpar dados locais
+      setUser(null);
+      setToken(null);
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('authUser');
+    }
   };
 
   return (
